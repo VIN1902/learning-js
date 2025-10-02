@@ -1,0 +1,12 @@
+{
+  "name": "learning-js",
+  "version": "1.0.0",
+  "description": "To learn JavaScript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vikas Indora",
+  "license": "ISC"
+}
