@@ -3,10 +3,10 @@ This document explains JavaScript execution from a **low-level design (LLD)** an
 
 # High level Design
 1. Script starts → GEC created → memory phase → code phase  
-2. Synchronous code runs → callstack executes functions one-by-one  
+2. Synchronous code runs → callstack executes functions one-by-one, each functions is used to create its own stack-frame by engine.
 3. Async tasks handed to runtime after being completed → queued in macro/microtask queues  
 4. Event loop monitors stack → pushes ready tasks from queues to stack  
-5. Closures and callbacks can access variables even after stack-frames are popped  
+5. Closures and callbacks can access variables even after function's stack-frames are popped  
 6. Script ends → GEC stack-frame popped, global variables remain until program ends
 7. Final Points:
     - Stack = synchronous execution; Queue = async scheduling; Heap = long-term storage  
@@ -63,3 +63,37 @@ This document explains JavaScript execution from a **low-level design (LLD)** an
   2. If yes, takes next task from **microtask queue** → executes  
   3. Then checks **macrotask queue** → executes next  
 - Ensures **non-blocking behavior** in single-threaded JS.
+
+# An Example to see it in action
+```js
+function timer() {
+  let msg = "Hello after 2s";
+  setTimeout(function() {
+    console.log(msg);
+  }, 2000);
+}
+timer();
+/*
+How engine executed this code and how callback became a closure:
+1. First the GEC - global execution context, was created the initial stack-frame for the whole program.
+2. During memory phase the function's body was stored as-it-is to 'timer' variable. 
+3. During code phase function defination was useless but 'timer()' line was important as now the stack-frame is under execution.
+4. Callstack creates stack-frame for fucntion timer on top of GEC.
+5. Local variable 'msg' was scoped to the stack-frame of this timer function (FEC - function execution context).
+6. setTimeout scheduled a task with the runtime environment (Web API), then immediately returned control to the JS engine. Time-taking and blocking work was handed-off to runtime environment along with 2s timer. This was it prevented the js-thread from being blocked to perform this time-consuming task.
+7. As callback inside setTimeout() was leaving the callstack, engine said store the 'msg' to heap for long-term as callback is trying to reach it (entire lexical environment record was retained in heap by the engine as it needed to outlive the FEC of parent function because the callback referenced it). Now 'msg' was no longer attached to its function's stack-frame.
+8. Finally the stack-frame of timer function was popped but not the msg variable and its data in it.
+9. In runtime env. the callback was registered in its memory and after the internal clock of 2 seconds ran out it was sent to MacroTask Queue.
+10. Now event loop checked that the callstack was empty so it allowed the callback from Queue to enter to make a new stack-frame for execution on top of the GEC (GEC remains alive and running for the async callback that is remaining).
+11. In this new stack-frame the console.log() did its job and tried to access 'msg' variable which it got from heap.
+12. After the callback FEC finished (popped), control returned to the GEC. The GEC itself is popped only when the program ends and the event loop has no more work.
+13. Finally the program ended and everything was done, If no other references to msg, garbage collector may now clean it.
+- But key thing to note here is that callback remembered its outer function's variable even when its stack-frame (execution context) was gone. This is the defination of closure. So the callback became a closure also.
+- It still had access to the lexical environment (msg) of its parent (timer) after the parent’s execution context was gone.
+- msg was a local variable but it was just a string, a primitive datatype. so it was stored in stack directly not heap.
+    - when engine noticed that callback was trying to reach msg, it moved whole lexical environment record of it to heap.
+    - this is different from simply moving the string (primitive) value because, record also has the binding (assignment of value to variable).
+    - That’s why even if you changed msg later (e.g., to "Bye"), the closure would still see the latest value, because it still points to the binding, not a frozen copy.
+    - in most languages primitive values are stored directly on stack but in JS primitive values are stored in the variable’s environment record. That environment record itself is managed in the call stack (inside the execution context).
+*/
+```

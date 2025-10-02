@@ -97,18 +97,19 @@ function timer() {
 timer();
 /*
 How engine executed this code and how callback became a closure:
-1. First the GEC was created the initial stack-frame for the whole program.
+1. First the GEC - global execution context, was created the initial stack-frame for the whole program.
 2. During memory phase the function's body was stored as-it-is to 'timer' variable. 
 3. During code phase function defination was useless but 'timer()' line was important as now the stack-frame is under execution.
 4. Callstack creates stack-frame for fucntion timer on top of GEC.
-5. Local variable 'msg' was scoped to the stack-frame of this timer function.
-6. setTimeout was blocking the code and its not core-js its a web-API, so it was handed-off to runtime environment along with 2s timer.
-7. As callback inside setTimeout() was leaving the callstack, engine said store the 'msg' to heap for long-term as callback is trying to reach it. Now 'msg' was no longer attached to its function's stack-frame.
+5. Local variable 'msg' was scoped to the stack-frame of this timer function (FEC - function execution context).
+6. setTimeout scheduled a task with the runtime environment (Web API), then immediately returned control to the JS engine. Time-taking and blocking work was handed-off to runtime environment along with 2s timer. This was it prevented the js-thread from being blocked to perform this time-consuming task.
+7. As callback inside setTimeout() was leaving the callstack, engine said store the 'msg' to heap for long-term as callback is trying to reach it (entire lexical environment record was retained in heap by the engine as it needed to outlive the FEC of parent function because the callback referenced it). Now 'msg' was no longer attached to its function's stack-frame.
 8. Finally the stack-frame of timer function was popped but not the msg variable and its data in it.
 9. In runtime env. the callback was registered in its memory and after the internal clock of 2 seconds ran out it was sent to MacroTask Queue.
-10. Now event loop checked that the callstack was empty so it allowed the callback from Queue to enter to make a new stack-frame for execution.
+10. Now event loop checked that the callstack was empty so it allowed the callback from Queue to enter to make a new stack-frame for execution on top of the GEC (GEC remains alive and running for the async callback that is remaining).
 11. In this new stack-frame the console.log() did its job and tried to access 'msg' variable which it got from heap.
-12. Finally the program ended and everything was done, If no other references to msg, garbage collector may now clean it.
+12. After the callback FEC finished (popped), control returned to the GEC. The GEC itself is popped only when the program ends and the event loop has no more work.
+13. Finally the program ended and everything was done, If no other references to msg, garbage collector may now clean it.
 - But key thing to note here is that callback remembered its outer function's variable even when its stack-frame (execution context) was gone. This is the defination of closure. So the callback became a closure also.
 - It still had access to the lexical environment (msg) of its parent (timer) after the parent’s execution context was gone.
 - msg was a local variable but it was just a string, a primitive datatype. so it was stored in stack directly not heap.
