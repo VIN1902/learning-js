@@ -17,12 +17,24 @@ Because of this, functions in JS are not just blocks of code, but also **values*
 
 # Lexical scoping mechanism (The base rule)
 - In JavaScript, where you write a function in the code determines what variables it can access.
-- “Lexical” = based on the code’s physical location in the source.
+- “Lexical” = based on the code’s physical location in the source, not where its called.
 - A function can access:
     - Its own local variables
     - Variables from outer (parent) functions
     - Global variables
 - A function cannot access variables from functions that are declared inside it (child functions).
+
+## How lexical scoping works
+- In CS lexical mean based on written structure of source code not runtime behaviour.
+- In JS, every time a function is invoked, an Execution Context (EC) is created. This EC lives on the callstack as a stack-frame.
+- Inside each EC, the engine also creates a Lexical Environment (LE). Think of this as the “variable storage + scope rules” attached to that stack-frame.
+- An LE has two parts:
+    1. Environment Record (ER) - storage of variables, parameters, function declarations.
+    2. Outer reference - a pointer to parent's LE. This is how the scope chain is built.
+- lexical envrionment record - the ER - is responsible for actually storing the variable of a function that are in its 'scope'.
+- the term lexical decides this scope based on where the function was written in source code not where it was called (that would be dynamic scope).
+- Execution Context = the “control box” for a function.
+- Lexical Environment = the “variable box + scope chain” inside it.
 
 ```js
 function outer() {
@@ -61,7 +73,7 @@ setTimeout(() => console.log("Runs later"), 1000);
 - Closure is a function that remembers the variables from its outer-function even after that stack-frame has ended.
 - Closure = must be inner function + survives beyond parent + keeps access to outer variables
 - All closures are inner functions, but not all inner functions are closures.
-- Closures persist because the lexical environment record is kept in the heap, from stack where its usually is. This is decided by JS engine if some function tries to reach outer-function's variables.
+- Closures persist because the lexical environment of parent has environment record which is kept in the heap, from stack where its usually is. This is decided by JS engine if some function tries to reach outer-function's variables.
     - during scope analysis (before execution), the engine already marks variables as captured and to be placed in heap. done during memory phase of callstack.
 ```js
 function parent() {
