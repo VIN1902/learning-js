@@ -1,3 +1,17 @@
+/* 
+`if (condition) {} else {}`
+
+- concept is if the 'condition' is evaluated as truthy value then its block runs otherwise if evaluated as falsy value then else block runs.
+- in JS falsy values are: false, 0, '', null, undefined, NaN. everything else is truthy.
+
+if (false) {
+    // task 1
+} else {
+    // task 2    
+}
+- in this example false is evaluated as falsy value therefore else block is executed i.e. task 2.
+*/
+
 // if ask for masala maggi then add spices else give plain maggi
 function cookMaggi(type) {
     type = String(type).toLowerCase();
