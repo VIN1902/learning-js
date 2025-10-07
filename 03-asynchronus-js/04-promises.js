@@ -90,6 +90,29 @@ async function consumePromiseFour(){
 }
 consumePromiseFour()
 
+
+// -------------------------------------------------------------------------------------------
+
+/*
+An explaination for promise working with promiseThree as an example:
+
+- new Promise(function(){...}) this runs exactly like any-other function (the JS engine just pushes its EC onto the call stack and executes it). At this point the promise is pending.
+    - ex: 
+        let p = new Promise((res, rej) => console.log('executor running')); 
+        console.log('after'); 
+        -> output: 'executor running' and then 'after'.
+- The “callback” you pass to new Promise() is not like a .then callback; it’s a special immediate function whose job is to call resolve or reject later.
+    - So in example when setTimeout()'s timer runs out in browser/node, the callback within it (which has resolve,reject inside) is sent to macrotask queue.
+    - when callstack picks up that callback from macrotask queue and executes it then resolve or reject is called, that's when promise is fulfilled.
+- then,catch,finally do not run immediately, they register a callback on promise. when promise is fullfilled/settles, then these callbacks are sent to microtask queue.
+- each callback is added to callstack by event loop, in order, from microtask queue. and they get executed by creating their own execution context one by one. well when callstack was empty GEC was still there, the callbacks of then/catch/finally created their EC on top of it.
+    - callbacks are executed in the order they were registered in the microtask queue.
+- In .then chaining the returned value is a new promise and resolved value of the previous .then is passed to the next.
+- If any .then callback throws, the next .catch handles it. You don’t need to attach .catch to every .then.
+*/
+
+// -------------------------------------------------------------------------------------------
+
 // promisification => converting a legacy code running on callbacks to support promises by building a wrapper function.
 // make promise versions of readFile, writeFile, unlink
 
