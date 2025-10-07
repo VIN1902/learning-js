@@ -5,6 +5,18 @@ Sync and Async both have their use-cases.
 */
 
 /*
+ABSTRACT AWAY THE LOWER-LEVEL ARCHITECTURE WHEN WRITING WITH PROMISES OR ASYNC/AWAIT
+
+don't think anymore about how callbacks are flowing in the runtime (engine,queues,environment/api,eventloop, etc), if you find that too confusing or hard.
+
+because:
+- Promises and async/await don’t create a new execution model.
+- They just use the same concepts (callbacks, queues, closures) behind cleaner syntax.
+- Its implementation details are intentionally abstracted away to work with them as black-box tools for async tasks. that's why they are called syntactical-sugar.
+- Callbacks/Closures are raw JS logic and behaviour that is easy to 'see' how it works at low level.
+*/
+
+/*
 Promise were introduced as syntax-sugar over callback.
 Promise is a intermediate value which is immediatly returned so that the rest of the code can move on.
 
