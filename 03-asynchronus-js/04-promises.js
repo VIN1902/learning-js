@@ -104,6 +104,7 @@ An explaination for promise working with promiseThree as an example:
 - The “callback” you pass to new Promise() is not like a .then callback; it’s a special immediate function whose job is to call resolve or reject later.
     - So in example when setTimeout()'s timer runs out in browser/node, the callback within it (which has resolve,reject inside) is sent to macrotask queue.
     - when callstack picks up that callback from macrotask queue and executes it then resolve or reject is called, that's when promise is fulfilled.
+- So main funda is resolve() or reject() call in Promise makes it fullfilled/settled. now that can be directly within promise body (then executes immediately on callstack), inside timer (then goes through macrotask queue and then callstack execution) or inside something that goes in microtask queue. (goes through microtask queue and then callstack execution).
 - then,catch,finally do not run immediately, they register a callback on promise. when promise is fullfilled/settles, then these callbacks are sent to microtask queue.
 - each callback is added to callstack by event loop, in order, from microtask queue. and they get executed by creating their own execution context one by one. well when callstack was empty GEC was still there, the callbacks of then/catch/finally created their EC on top of it.
     - callbacks are executed in the order they were registered in the microtask queue.
