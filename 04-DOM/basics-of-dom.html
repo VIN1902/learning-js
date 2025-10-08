@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM</title>
+
+    <style>
+        .page-heading {
+            font-family: monospace;
+        }
+        .para {
+            font-family: cursive;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1 id="main-heading" class="page-heading">Learning DOM</h1>
+    <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt voluptatibus ipsam fugiat quod qui quibusdam soluta adipisci rem vitae provident. Dignissimos?</p>
+    <h2>Lorem, ipsum dolor</h2>
+    <p class="para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos dicta in ipsa alias sapiente quaerat minus. Nobis temporibus voluptas obcaecati iste.</p>
+    <ul>
+        <li class="list-item">One</li>
+        <li class="list-item">Two</li>
+        <li class="list-item">Three</li>
+    </ul>
+
+    <script>
+        // access elements
+        const title = document.getElementById('main-heading')
+        document.getElementById('main-heading').className
+        document.getElementById('main-heading').getAttribute('class')
+        document.getElementsByClassName('para').id
+        document.getElementsById('main-heading').setAttribute('class', "page-heading another-class") // this always overrites not adds
+
+        // style
+        title.style.backgroundColor = "yellow"
+
+        // add content
+        title.innerText = 'DOM is done' // only shows what content is visible currently inside the element.
+        title.textContent // shows any content that is there even if its hidden using CSS or anyhow.
+        title.innerHTML // shows content plus any nested html inside and its content as whole element too.
+
+        // queries
+        document.querySelector('h1') // returns first instance of element only. The argument is exact CSS Selector syntax.
+        const nodeListOfItems = document.querySelectorAll('li') // return a NodeList of elements.
+        /*
+        NodeList is not an array but array-like. it has methods like forEach() but not other common array methods like map(),etc.
+        */
+       nodeListOfItems[0].style.color = "green"
+        // similarly we have...
+       const HTMLcollectionOfItems = document.getElementsByClassName('list-item') // returns a HTML Collection that is different from NodeList and array
+
+        // convert nodelist and htmlcollection into array
+        const arr1 = Array.from(HTMLcollectionOfItems)
+        const arr2 = Array.from(nodeListOfItems)
+
+    </script>
+
+</body>
+</html>
