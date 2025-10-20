@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #212121;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    
+</body>
+
+<script>
+    // creating a node on dom (anythings that we were getting from .childNodes like text, div, h1, etc.)
+    const section = document.createElement('section')
+    console.log(section) // just to see it somewhere for now
+
+    // defining attributes to node (as we saw in nodeList that every node already has all the attribute just set to null or empty)
+    section.id = Math.round(Math.random() * 10 + 1)
+    section.className = "main"
+    section.setAttribute("title", "This is a title") // more optimised option than all other here as it directly sets and doesn't first get the element
+    section.style.backgroundColor = "#ffbc49"
+    section.style.padding = "1rem"
+    
+    // creating a text node and append OR directly set innerText attribute inside the element - both options are valid.
+    // section.innerText = "This is some text inside the section."
+    const text = document.createTextNode('This is some text inside the section.')
+    section.appendChild(text)
+
+    // attach/render the element on page (before this the element was only created in memory)
+    document.body.appendChild(section)
+</script>
+</html>

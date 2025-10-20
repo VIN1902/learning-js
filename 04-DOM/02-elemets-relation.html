@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="parent">
+        <div class="day-1">Monday</div>
+        <div class="day-2">Tuesday</div>
+        <div class="day-3">Wednesday</div>
+        <div class="day-4">Thursday</div>
+    </section>
+
+    <script>
+        // select any parent element
+        const parent = document.querySelector(".parent")
+        console.log(parent)
+
+        // every element has children
+        console.log(parent.children) // gives a htmlCollection
+        for(let i = 0; i < parent.children.length; i++){
+            console.log(parent.children[i].innerText)
+        }
+        console.log(parent.firstElementChild)
+        console.log(parent.lastElementChild)
+        
+        // even children can access parent or sibling(no need to traverse the dom tree with querySelector again-and-again)
+        const childOne = document.querySelector(".day-1")
+        console.log(childOne)
+        console.log(childOne.parentElement)
+        console.log(childOne.nextElementSibling)
+
+        // childNodes - gives you ALL the children nodes of a parent, even the syntax-spaces as 'text' node or comments as 'comment' node.
+        console.log(parent.childNodes) // gives nodeList (notice length of 9 not 4 for just days)
+        
+    </script>
+</body>
+</html>

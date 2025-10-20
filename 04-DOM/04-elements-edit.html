@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #212121;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <h1>Programming languages</h1>
+        <ul class="languages">
+            <li>Javascript</li>
+        </ul>
+    </section>
+</body>
+
+<script>
+    function addListElement(listText) {
+        const li = document.createElement('li')
+        const text = document.createTextNode(`${listText}`)
+        li.appendChild(text)
+        
+        const ul = document.querySelector('.languages')
+        ul.appendChild(li)
+    }
+
+    addListElement('Python')
+    addListElement('Ruby')
+    addListElement('C++')
+
+    // edit element
+    function editListElementText(newListText, elementNumber) {
+        const specificListItem = document.querySelector(`li:nth-child(${elementNumber})`)
+        const newLi = document.createElement('li')
+        const newText = document.createTextNode(`${newListText}`)
+        newLi.appendChild(newText)
+
+        specificListItem.replaceWith(newLi)
+    }
+
+    editListElementText('Java', 3)
+
+    // remove element
+    function removeListElement(elementNumber) {
+        const specificListItem = document.querySelector(`li:nth-child(${elementNumber})`)
+        specificListItem.remove()
+    }
+
+    removeListElement(3)
+</script>
+</html>
