@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color:#212121;
+            color: #fff;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        img {
+            border-radius: 20px;
+        }
+
+        h1 {
+            margin: 2rem 0;
+        }
+
+        a {
+            color: #ff69b4;
+        }
+
+        ul {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+
+        }
+
+        ul li:last-child {
+            grid-column: span 2;
+            justify-self: center;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Amazing Images</h1>
+    <ul id="images">
+        <li><img width="200px" src="https://images.pexels.com/photos/8819159/pexels-photo-8819159.jpeg" id="diwali" alt="diyas"></li>
+        <li><img width="200px" src="https://images.pexels.com/photos/1375849/pexels-photo-1375849.jpeg" id="girl" alt="hot-girl"></li>
+        <li><img width="200px" src="https://images.pexels.com/photos/270404/pexels-photo-270404.jpeg" id="code" alt="html-code"></li>
+        <li><img width="200px" height="112.312px" src="https://images.pexels.com/photos/834894/pexels-photo-834894.jpeg" id="enjoy" alt="cracker"></li>
+        <li><a href="https://wikipedia.com" id="wikipedia" target="_blank" title="Won't work cause preventDefault">Link to Wikipedia</a></li>
+    </ul>
+</body>
+
+<script>
+    // Don't add events as attributes into html body as that is non-scalable.
+    // This below approach of adding events is very limiting as its doesn't give you propogation control:
+    // document.getElementById('girl').onclick = ()=>alert('Clicked the image of girl')
+
+    document.getElementById('images').addEventListener('click', function (eventObject) {
+        alert('Clicked the image container')
+        console.log(eventObject)
+    }, false)
+
+    document.getElementById('girl').addEventListener('click', function (eventObject) {
+        alert('Clicked the image of girl')
+        console.log(eventObject)
+        eventObject.stopPropagation()
+    }, false)
+
+    /*
+    eventObject has a lot of events that a browsers and its environment(mouse, etc) can have. List of important ones:
+
+    A. Common properties
+    1. type (keyboard, mouse)
+    2. timestamp
+    3. preventDefault
+    4. target
+    5. currentTarget
+    6. toElement, srcElement (old InternetExplorer stuff) 
+
+    B. MouseEvent Properties
+    7. clientX/Y, screenX/Y, pageX/Y
+    8. button
+    9. relatedTarget
+
+    C. KeyboardEvent Properties
+    10. altkey, ctrlkey, shiftkey, metakey
+    11. key
+    12. code
+    13. keyCode (depricated)
+
+    D. Focus and Form Properties
+    14. focus, blur
+    15. input, change
+    16. submit, reset
+
+    E. Pointer and Touch Properties
+    17. pointermove, pointerdown, pointerup
+    18. touchmove, touchstart, touchend
+
+    F. Miscellaneous Properties
+    19. wheel, scroll, resize
+    20. load, DOMContentLoaded, beforeunload
+    21. contextmenu
+    22. copy, cut, paste
+    */
+
+    /*
+    Event Propogation:
+    Two phases of event propagation in the DOM, determining the order in which event handlers are triggered for nested elements.
+    1. Event Bubbling (default / false)
+        - "upward" phase where the event travels from the target element back up to the window.
+    2. Event Capturing (true)
+        - "downward" phase where the event travels from the window to the target element.
+    */
+
+    document.getElementById('wikipedia').addEventListener('click', function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+    })
+
+    /*
+    Capturing happens first and then bubbling, regardless of its set to true or false:
+    say we have a structure where we set grandparent as capture mode {capture: true} and rest (window, parent, child) are set to default bubble {capture: false}.
+    Cycle (1. capture 2. bubble) =>
+    capture phase:
+    - 1st window object is checked, as its set to bubble we skip it.
+    - 2nd grandparent is checked, its set to capture we print it.
+    - 3rd parent is checked, its set to bubble we skip it.
+    - 4th child is checked, its set to bubble we skip it.
+    bubble phase:
+    - 5th child is checked, its set to bubble we print it.
+    - 6th parent is checked, its set to bubble we print it.
+    - 7th grandparent is checked, its set to capture we skip it.
+    - 8th window is checked, its set to bubble we print it.
+    */
+
+   // selection.addEventListener('event', ()=>{}, {capture: flase, once: true})
+   // selection.removeEventListener('event', memoryStoredFunction)
+
+    /*
+    Event Delegation - handing over the event to specified elements
+    Usefull when dynamically adding elements to page and not to set events for them individually.
+
+    document.addEventListener('click', e=> {
+        if (e.target.matches('div')) {
+            console.log('Only works on divs')
+        }
+    })
+    
+    wrap it in a global function if you want:
+    function globalEventListener(typeOfEvent, selectedElement, callback) {
+        document.addEventListener(typeOfEvent, e=> {
+        if (e.target.matches(selectedElement)) callback(e)
+        })
+    }
+    */
+
+    // for learning: remove a image on clicking
+    document.querySelector('#images').addEventListener('click', function (e) {
+        if(e.target.tagName === "IMG"){
+            let removeIt = e.target.parentNode
+            removeIt.remove()
+            // removeIt.parentNode.removeChild(removeIt)
+        }
+    }, false)
+
+    
+</script>
+</html>
