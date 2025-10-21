@@ -28,7 +28,8 @@ let myObj = {
 myObj.myArrowFnx() // this = window (non-strict & strict)
 ```
 - if 'this' was defined inside a constructor function then at time of calling/exectution only the newly created object (instance) is assigned to 'this' as that's the base object now.
-- constructor functions (classes by extension) and new keyword binds 'this' to the instance object created.
+- constructor functions (classes by extension) and new keyword binds 'this' to the instance object created. 
+- JS creates a new empty object ({}), binds 'this' to it, and returns it.
 ```js
 function ConstructorFnx(name, age){
     this.name = name
