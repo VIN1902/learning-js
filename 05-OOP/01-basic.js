@@ -20,6 +20,8 @@ function Person(name, age) {
     this.name = name 
     // could be written as name = name but that's confusing which is parameter and which is function's (or later instance's) variable/property.
     // so use this to specify the context of variable name, who does it belong to at call time.
+    // also if no 'this' was used and it was just 'name = name' then engine uses identifier-lookup (scope-lookup) instead of property-lookup. That would cause referenceError as withing this FEC scope and in outside GEC scope no such variable called 'name' exists.
+    // using 'this' caused the engine to switch to property-lookup, and look for property stored in heap for the newly created object by 'new'.
     this.age = age
 
     this.programming = function () {
