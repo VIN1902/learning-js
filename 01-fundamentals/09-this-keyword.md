@@ -1,6 +1,8 @@
 # This keyword
 - 'this' refers to the context of something. meaning changes with context.
 - The value of 'this' is determined at call time by the function’s "base object" (the thing before the dot when the function is invoked).
+- _Without 'this', when the function is called, engine tries to do scope-lookup first in the FEC then in the GEC. But when 'this' is used the engine switches its mode and instead performs property-lookup inside the appropriate object stored in the heap memory._
+    - _Without 'this', the engine performs identifier lookup (scope lookup) through the function’s lexical environment chain (FEC → outer → GEC), which are referenced by execution contexts on the call stack. But When 'this' is used, the engine performs a property lookup on the object bound to this, which resides in the heap._
 - If 'this' is defined inside an object's function then at time of calling that function under the context of its object, 'this' is assigned that value.
 ```js
 let myObj = {

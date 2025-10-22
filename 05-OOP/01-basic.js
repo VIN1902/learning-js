@@ -37,6 +37,8 @@ function Person(name, age) {
 let personOne = new Person("Vikas", 23)
 console.log(personOne)
 
+// abstraction, polymorphism and encapsulation is already achieved with constructor function and new keyword.
+
 /*
 new keyword: (was always there in JS even before ES6 classes)
 1. create an empty new object.
@@ -51,4 +53,56 @@ new keyword: (was always there in JS even before ES6 classes)
 JS BEHAVIOUR is prototypal chaining. It keeps on looking for more data in the parent object's properties/methods.
 everything chains up to Object constructor function and beyond is Null. (functions, strings, array, etc.)
 read more in previous notes.
+*/
+
+// inheritance
+
+Object.prototype.myProperty = function () {
+    console.log(this)
+    console.log(`I injected a property in the global constructor function.`)
+}
+let carObj = {car: "i10"}
+carObj.myProperty()
+let carArr = ['toyota', 'kia', 'bmw']
+carArr.myProperty()
+"vikas".myProperty()
+
+let user = {
+    id: 123,
+    work: 'basic'
+}
+
+let teacher = {
+    moreWork: "teaching",
+    __proto__: user
+}
+
+let janitor = {
+    moreWork: "cleaning"
+}
+
+janitor.__proto__ = user
+
+console.log(user.id)
+console.log(teacher.id)
+console.log(janitor.id)
+
+/*
+before:
+janitor.__proto__ = Object.prototype (default)
+so => janitor --> Object.prototype --> null
+
+after:
+janitor.__proto__ = user (i made prototype of janitor point directly to user object)
+but user.__proto__ = Object.prototype
+so => janitor --> user --> Object.prototype --> null
+
+gotcha:
+janitor.__proto__ = user.prototype (converts to janitor.__proto__ = undefined), as '.prototype' property is only available to constructor funtions not regular objects.
+janitor.__proto__ = user.__proto__ (converts to janitor.__proto__ = Object.prototype cause user.__proto__ === Object.prototype), skips the inhertance from user object.
+
+i could have done: user.__proto__ = null, so that janitor stops inheritance at user object only.
+
+modern syntax is:
+Object.setPrototypeOf(janitor, user)
 */

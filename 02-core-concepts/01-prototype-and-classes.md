@@ -10,7 +10,7 @@
 ## .prototype vs .__proto__ 
 - Constructor functions (like Array) have a .prototype property, which stores shared methods. Instances don’t have .prototype; they have __proto__ pointing to that prototype.
 
-- Whenver you create an instance of them, JS automaticaly sets '__proto__' that links to .prototype property of parent which has the methods defined for sharing.
+- Whenver you create an instance of them, JS automaticaly sets '__proto__' that links to .prototype property of parent which has the methods defined for sharing. (This is done by 'new' keyword's mechanism during instance creation.)
 - arr.__proto__ = Array.prototype (this link enables inheritance)
 - When you call arr.map(), JavaScript looks-up 'map' method in arr itself, and if it doesn't find it, it checks arr.__proto__, which points to Array.prototype and there does exits a map() method.
 
@@ -20,6 +20,14 @@
 - This kind of inheritance is called prototype chain.
 - if you want to break chain: arr.__proto__ = null (not used in real-code)
 - At the top of the chain is the global Object constructor. Every other built-in constructor function’s prototype eventually links to Object.prototype. This is the root.
+
+## Significance of 'new' keyword
+- All the story/theory above is controlled by just one keyword working upon these global constructor functions.
+- This is the one responsible for:
+    1. creating a newly instance (blank object in heap)
+    2. linking or setting up this prototypal-chain, leading to inheritance.
+    3. calling the constructor function and set the 'this' keywords context to new object.
+    4. returning this new instance.
 
 ## Prefered syntax
 - In coding standard we prefer former instead of latter:
@@ -36,6 +44,7 @@ child.greet(); // "hi"
 ```
 2. Changing prototypes dynamically
 ```js
+Object.getPrototypeOf(Array)
 Object.setPrototypeOf(obj, newProto)
 ```
 3. hasOwnProperty vs. inherited props - Useful for distinguishing between properties directly on an object vs. coming from the prototype.
@@ -74,8 +83,8 @@ console.log(person2.age);  // 30
 - In simple terms it allocates a new memory space in heap and then return its address
 - In depth:
     1. Creates a new empty object {}
-    2. Sets the prototype of this object to the constructor function’s .prototype.
-    3. Calls the constructor function, passing this as the newly created object.
+    2. Link the prototype of this new object to the constructor function’s .prototype property, now it has access to all the defined properties/methods.
+    3. Calls the constructor function with specified arguments and bind 'this' to new object.
     4. Returns the new object (unless the function explicitly returns a different object).
 
 ## Achieve inheritance
