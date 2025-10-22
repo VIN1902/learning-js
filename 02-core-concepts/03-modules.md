@@ -43,6 +43,7 @@ console.log(add(2, 3));
 ```
 - official ECMAScript Standard
 - Asynchronous
+- sets the node to use strict-mode by default
 
 # Setup ESM in node
 - all .js files by defualt are treated as CJS by node.

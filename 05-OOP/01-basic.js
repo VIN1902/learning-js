@@ -26,13 +26,13 @@ function Person(name, age) {
         console.log(`${this.name} can code.`)
     }
 
-    return this // implicitly this executes even if you don't write it.
+    return this
 }
 
 // let personOne = Person("vikas", 23)
 // console.log(personOne)
-// without the 'new' keyword 'this' is not binded to an empty object (created for this instance) and instead is binded to undefined (strict mode is default in node, otherwise binded to window/global node object in non-strict mode)
-// so undefined.name = name is a TypeError
+// without the 'new' keyword 'this' is not binded to an empty object (created for this instance) and instead is binded to undefined in strict and global object (window/{}) in non-strict.
+// so undefined.name = name is a TypeError (in strict mode) otherwise log just prints the global object assigned to 'this' (in non-strict)
 
 let personOne = new Person("Vikas", 23)
 console.log(personOne)
