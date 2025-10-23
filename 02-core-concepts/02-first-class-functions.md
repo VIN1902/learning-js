@@ -16,13 +16,26 @@ Because of this, functions in JS are not just blocks of code, but also **values*
 - and more...
 
 # Lexical scoping mechanism (The base rule)
-- In JavaScript, where you write a function in the code determines what variables it can access.
+- Lexical scoping means the scope of a variable is determined by where it is written in the source code, not by where or how the function is called.
 - “Lexical” = based on the code’s physical location in the source, not where its called.
+- _“You can tell what variables a function can access just by looking at where it’s written — not where it’s run.”_
+- It happens during compile/parse time (when and where its written).
 - A function can access:
     - Its own local variables
     - Variables from outer (parent) functions
     - Global variables
 - A function cannot access variables from functions that are declared inside it (child functions).
+```js
+function outer() {
+  let a = 10
+  function inner() {
+    console.log(a)
+  }
+  inner()
+}
+
+outer() // 10
+```
 
 ## How lexical scoping works
 - In CS lexical mean based on written structure of source code not runtime behaviour.
@@ -36,41 +49,9 @@ Because of this, functions in JS are not just blocks of code, but also **values*
 - Execution Context = the “control box” for a function.
 - Lexical Environment = the “variable box + scope chain” inside it.
 
-```js
-function outer() {
-  let a = 10;
-  function inner() {
-    console.log(a); // Functions carry their surrounding “environment” (scope) based on where they are written, not from where they are called.
-  }
-  inner();
-}
-outer();
-```
-
-# Callback
-- Callback is a function passed as an argument to another function.
-- The parent function “calls back” the function at the right time.
-```js
-function parent(callback) {
-  console.log("Parent starts");
-  callback(); // call the callback
-  console.log("Parent ends");
-}
-
-function child() {
-  console.log("Child runs");
-}
-
-parent(child);
-```
-- Callbacks are possible only because functions are first-class (we can pass them like values).
-```js
-setTimeout(() => console.log("Runs later"), 1000);
-```
-- callback is the arrow function inside the argument and the outer function (setTimeout) calls it within itself likely stated in its defination.
-
 # Closure
-- Closure is a function that remembers the variables from its outer-function even after that stack-frame has ended.
+- Closure is a function that remembers the variables from its outer-function scope (inner-function has acces to outer-function's scope) even after that stack-frame has ended.
+- _"A closure is the combination of a function and its lexical environment (scope chain) that existed when it was created."_
 - Closure = must be inner function + survives beyond parent + keeps access to outer variables
 - All closures are inner functions, but not all inner functions are closures.
 - Closures persist because the lexical environment of parent has environment record which is kept in the heap, from stack where its usually is. This is decided by JS engine if some function tries to reach outer-function's variables.
@@ -96,6 +77,29 @@ function parent() {
 }
 parent(); // inner disappears after parent finishes
 ```
+
+# Callback
+- Callback is a function passed as an argument to another function.
+- The parent function “calls back” the function at the right time.
+```js
+function parent(callback) {
+  console.log("Parent starts");
+  callback(); // call the callback
+  console.log("Parent ends");
+}
+
+function child() {
+  console.log("Child runs");
+}
+
+parent(child);
+```
+- Callbacks are possible only because functions are first-class (we can pass them like values).
+```js
+setTimeout(() => console.log("Runs later"), 1000);
+```
+- callback is the arrow function inside the argument and the outer function (setTimeout) calls it within itself likely stated in its defination.
+
 ## How Callbacks and Closures relate
 - A callback becomes a closure if it uses variables from the parent’s scope after the parent is gone.
 - Callback may or may not be a closure, depending on whether it captures variables.
@@ -132,3 +136,30 @@ How engine executed this code and how callback became a closure:
 */
 ```
 - Many async callbacks (like setTimeout, event listeners) are closures, because they keep using variables from their parent function even after the parent has finished. so callback + closure = common case.
+
+# Clearing Lexical Scoping and closure doubts
+```js
+function outer() {
+  let a = 10
+
+  function inner() {
+    console.log(a)
+  }
+
+  return inner
+}
+```
+1. Lexical Scoping (compile-time)
+- When the JS engine reads this:
+    - It knows that inner is lexically inside outer.
+    - So inner can access a.
+- (No execution yet — just scope mapping.)
+2. Closure (runtime)
+- When you run:
+    ```js
+    const fn = outer() // outer() executes, returns `inner`
+    fn() // executes later
+    ```
+- outer() finishes → normally, local variables (like a) would be gone.
+- But since inner is still referencing a, JS keeps that environment alive.
+- That preserved lexical environment + the function = closure.
