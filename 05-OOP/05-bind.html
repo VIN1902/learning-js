@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #323232;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            align-items: center;
+        }
+        button {
+            background-color: #ff69b4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: large;
+        }
+        button:hover{
+            background-color: #fd2892;
+            position: relative;
+            bottom: 2px;
+            left: 2px;
+        }
+        p {
+            background-color: orange;
+            padding: 10px 20px;
+            color: #fff;
+            font-size: large;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button>Click Me!</button>
+</body>
+
+<script>
+    // using exFnx.bind(), creates a new function, which when called, calls the exFnx with a new context of 'this' and specified arguments.
+    class React {
+        constructor(){
+            this.library = "react"
+            this.server = "http://127.0.0.1:3000"
+
+            document
+                .querySelector('button')
+                .addEventListener('click', this.handleClickEvent.bind(this))
+                // this.handleClickEvent (here button object was assigned to 'this', with no connection to new instance object created by 'new' stored in app. Cause 'this' value is set at calltime and button element is calling 'this'.)
+                // this.handleClickEvent.bind(this) (here the handleClickEvent function was glued to instance object as 'this' inside the bind method stores instance object.)
+                // instance object is the one that has access to properties like library and server, not the button object.
+        }
+
+        handleClickEvent() {
+            const text = document.createTextNode(`Button was clicked, on app of ${this.library} library.`)
+            const p = document.createElement('p')
+            p.appendChild(text)
+            document.body.appendChild(p)
+        }
+    }
+
+    const app = new React()
+    // FEC for React() ended by defining all the properties and methods to a new instance object stored in app.
+    // But the event happened after that, and by then any mention of 'this', even if written lexically inside the React() function, will decide the object at calltime (dynamic). 
+    // And that is the button object who called the event and not the instance object.
+    // Using .bind(this) glues the 'this' value to the instance object permanently, so even when the event occurs later, 'this' still points to app.
+</script>
+
+</html>
