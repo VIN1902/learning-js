@@ -98,6 +98,7 @@ console.log(r)
 
 // Without 'this', the engine performs identifier lookup (scope lookup) through the function’s lexical environment chain (FEC → outer → GEC), which are referenced by execution contexts on the call stack. But When 'this' is used, the engine performs a property lookup on the object bound to 'this', which resides in the heap.
 
+for statement 'this.param = param;' =>
 // RHS: param -> resolves via scope lookup inside the function’s local variables (which in this case was found to be withing scope of Random function when param varibale was implicitly created (var param;), by just passing 'param' named parameter).
 // LHS: this.param -> engine doesn’t check the scope; it immediately performs a property lookup on the heap object that this currently references (creating it if it doesn’t exist).
 */

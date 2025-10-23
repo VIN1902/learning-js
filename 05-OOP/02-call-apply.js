@@ -5,7 +5,7 @@ function SetUsername(username) {
 
 let storeReturnValue = SetUsername("vikas")
 console.log(storeReturnValue) // undefined in strict mode, global object (window or {}) in non-strict/script mode
-// if you don't write 'return this' statement then non-specified return in function always give undefined regardless of mode.
+// if you don't write 'return this' statement then non-specified return statement in function always give undefined regardless of mode.
 */
 
 /*
@@ -82,3 +82,22 @@ console.log(userOne)
 This time cause of 'call' method the SetUsername was called under a different context (this) with its arguments individually, both of which we specified.
 'this' context was specified to be used of CreateUser function and 'new' keyword is handling the 'this' assignment for it.
 */
+
+// Apply is the same as call, only difference is instead of passing arguments individually you pass an array of it.
+
+function SetSomething(username, x, y, z) {
+    this.username = username
+    this.x = x
+    this.y = y
+    this.z = z
+}
+
+function CreateSomething(username, x, y, z, email, password) {
+    SetSomething.apply(this, [username, x, y, z])
+
+    this.email = email
+    this.password = password
+}
+
+let something = new CreateSomething("sakiv", 1,2,3, "sakiv@gmail.com", 123)
+console.log(something)
