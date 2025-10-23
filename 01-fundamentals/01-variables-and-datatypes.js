@@ -43,7 +43,6 @@ let convertedDirectUserData = Number(directUserData);
 let convertedWeirdUserData1 = Number(weirdUserData1);
 let convertedWeirdUserData2 = Number(weirdUserData2);
 printApproachResultType(directUserData,weirdUserData1,weirdUserData2,convertedDirectUserData,convertedWeirdUserData1,convertedWeirdUserData2,"Number()");
-// NaN is not a datatype its a response, so if you wanted number then of NaN prohibit user from further processing etc.
 
 convertedDirectUserData = +directUserData;
 convertedWeirdUserData1 = +weirdUserData1;
