@@ -163,3 +163,18 @@ function outer() {
 - outer() finishes → normally, local variables (like a) would be gone.
 - But since inner is still referencing a, JS keeps that environment alive.
 - That preserved lexical environment + the function = closure.
+
+## Summary
+- lexical scoping is only the rule which says that inner has access to outer's scope (variable, etc). decided before runtime.
+- but there is a case where inner is not able to follow that rule, that is when outer is dead (FEC popped) and inner is trying to access scope of something that doesn't exit anymore.
+- for that case inner needs something more than just a rule, it needs a system where it can store the lexical scope in heap, for later use even after outer is dead. now inner can access the scope from the stored memory of outer who is now dead at the runtime.
+
+### more accurately
+- Lexical scoping is just a rulebook.
+    - It says: “Functions can access variables from their outer (lexically enclosing) scopes.”
+    - This rule is decided before runtime, during code parsing.
+- However, at runtime, when the outer function finishes, its Execution Context (FEC) is popped off the call stack, and normally its local variables would disappear.
+- Now comes the tricky case:
+    - If an inner function defined inside that outer function still exists (like being returned or passed around), it still needs access to those variables from the dead outer scope.
+- To handle that, JavaScript’s engine uses closures — it moves (or rather keeps alive) the outer function’s lexical environment in the heap, so the inner function can continue to reference it even after the outer function’s context is gone.
+- So, the rule (lexical scoping) says inner should be able to access those variables, and the mechanism (closure) makes that rule actually possible at runtime.
