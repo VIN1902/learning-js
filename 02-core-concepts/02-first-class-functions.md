@@ -153,7 +153,7 @@ function outer() {
 - When the JS engine reads this:
     - It knows that inner is lexically inside outer.
     - So inner can access a.
-- (No execution yet — just scope mapping.)
+- (No execution yet — just scope mapping / rule.)
 2. Closure (runtime)
 - When you run:
     ```js
