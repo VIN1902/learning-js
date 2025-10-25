@@ -2,6 +2,11 @@
 - 'this' refers to the context of something. meaning changes with context.
 - The value of 'this' is determined at call time by the function’s "base object" (the thing before the dot when the function is invoked).
 
+## Working of 'this'
+- Does 2 thing in order:
+1. When you write 'this' before a variable, it shifts engine to work as property-lookup on an object (stored in heap), instead of scope-lookup for that variable up the chain (stored in callstack within EC).
+2. Now when it tries to lookup property of an object, it first needs an object assigned to it. That object varies from case-to-case as what it will be.
+
 ## Example
 - _Without 'this', the engine performs identifier lookup (scope lookup) through the function’s lexical environment chain (FEC → outer → GEC), which are referenced by execution contexts on the call stack. But When 'this' is used, the engine performs a property lookup on the object bound to 'this', which resides in the heap._
 ```js
@@ -14,13 +19,13 @@ const r = new Random('abc')
 console.log(r)
 
 // RHS: param -> resolves via scope lookup inside the function’s local variables (which in this case was found to be withing scope of Random function when param varibale was implicitly created (var param;), by just passing 'param' named parameter).
-// LHS: this.param -> engine doesn’t check the scope; it immediately performs a property lookup on the heap object that this currently references (creating it if it doesn’t exist).
+// LHS: this.param -> engine doesn’t check the scope; it immediately performs a property lookup on the heap object that 'this' currently references (creating it if it doesn’t exist).
 ```
 
-## Different scenarios where 'this' is used
+## Different scenarios where 'this' is used and what object gets bound
 
 1. **Object Literal**
-- If 'this' is defined inside an object's function then at time of calling that function under the context of its object, 'this' is assigned that value.
+- If 'this' is used inside an object's function, then at time of function call, 'this' is assigned that object which called it. Usually its the object which defined it in first place, unless changed intentionally using other function methods.
 ```js
 let myObj = {
     name: "vikas",
@@ -33,7 +38,7 @@ myObj.myFnx() // this = myObj (non-strict & strict mode)
 
 2. **Bare-Function Call**
 - If 'this' is defined in a bare function (not inside any object) then at time of function call, 'this' is give context of global object, as by itself it didn't have any base object so use global Object.
-- The value of this inside a function is not about which object the function is, but about how the function is called.
+- Observe that even if you write 'this' lexically inside the function scope (FEC) at the end you call it globally (inside GEC), and that decides what 'this' is bound to.
 ```js
 function bareFunctionCall(){
     return console.log(this)

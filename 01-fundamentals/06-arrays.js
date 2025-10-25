@@ -91,6 +91,7 @@ console.log(jumbledArray)
 
 /*
 Methods which are modifying the original array:
+.push(), .pop(), .shift(), .unshift()
 .fill()
 .reverse()
 .splice()
@@ -108,3 +109,11 @@ console.log(concatUsingSpread);
 // array destructuring -> no need to rename, array is sequential
 let [num1, num2] = arr;
 console.log(num1, num2); // 1 2
+
+// Useful
+Array.isArray('bye') // false
+Array.from('bye') // ['b','y','e']
+let a = 4
+let b = 45
+let c = 423
+Array.of(a,b,c) // [4,45,423]
