@@ -2,14 +2,15 @@
 `if (condition) {} else {}`
 
 - concept is if the 'condition' is evaluated as truthy value then its block runs otherwise if evaluated as falsy value then else block runs.
-- in JS falsy values are: false, 0, '', null, undefined, NaN. everything else is truthy.
+- in JS falsy values are: [false, 0 (-0 and 0n), '', null, undefined, NaN]. everything else is truthy.
+- truthy values gotchas: "false", '0', ' ',  [],  {},  function(){}
 
-if (false) {
+if ('') {
     // task 1
 } else {
     // task 2    
 }
-- in this example false is evaluated as falsy value therefore else block is executed i.e. task 2.
+- in this example empty string is evaluated as falsy value therefore else block is executed i.e. task 2.
 */
 
 // if ask for masala maggi then add spices else give plain maggi
@@ -21,9 +22,6 @@ function cookMaggi(type) {
         return `Serving plain maggi right up`;
     }
 }
-// function -> A factory that is part of a bigger factor that only focus on one single functionality and is only concerned with incoming data (that we don't know what type will come), its processing and what it returns back to some other factory or manager (node).
-
-// if(this block only executes when condition evalutes as true){}
 
 function calcDiscount(totalAmount) {
     totalAmount = Number(totalAmount);
@@ -33,6 +31,7 @@ function calcDiscount(totalAmount) {
         return `Your final amount is ${totalAmount}, no discount applicable`;
     }
 
+    // Ternary Operator => condition ? truthy-execution : falsy-execution;
     //return totalAmount>1000 ? totalAmount * 0.9 : totalAmount;
 }
 console.log(calcDiscount('999'));
@@ -65,6 +64,7 @@ function trafficLight(light) {
     
 }
 // Inside switch case break or return -> break stops only switch not function and return stops the entire function implicitly stopping the switch too.
+// break; to prevent waterfall condition.
 trafficLight('gReeN')
 
 function checkTruthyValue(value) {
@@ -92,3 +92,18 @@ function login(username, password){
 console.log(login('ad',1212));
 // && -> both conditions should be true then only execute
 // || -> any first condition among multiple conditions, if found to be true then execute
+
+// nullish coalescing operator (??) - made for cases where we can get either null or undefined we don't know. and we don't want to assign null or undefined.
+let complexDataFromGodKnowsWhere;
+complexDataFromGodKnowsWhere = 'very complex string data' ?? 10 // 'very complex string data'
+complexDataFromGodKnowsWhere = null ?? 20 // 10
+complexDataFromGodKnowsWhere = undefined ?? 30 // 30
+complexDataFromGodKnowsWhere = null ?? 1 ?? 234 ?? 'wtf' ?? 0 ?? {key: "that's crazy"} // 1 (got null but don't let null get assigned instead assign whatever value mentioned is available first.)
+
+// check if array is empty
+let emptyarr = []
+if (emptyarr.length === 0) console.log('array is empty'), console.log('another statement fit in one line');
+
+// check if object is empty
+let emptyobj = {}
+if (Object.keys(emptyobj).length === 0) console.log('object is empty')

@@ -1,7 +1,3 @@
-function printLine() {
-    console.log("--------------------------------------------------------------------------------");
-}
-
 let salesData = [
     {product: 'Laptop', price: 1200},
     {product: 'Smartphone', price: 800},
